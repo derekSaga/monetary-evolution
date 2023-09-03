@@ -15,6 +15,7 @@ from distutils.util import strtobool
 from pathlib import Path
 
 from monetary_evolution.apps.core.apps import CoreConfig
+from monetary_evolution.apps.monetary.apps import MonetaryConfig
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,9 +42,7 @@ django_apps = [
     "django.contrib.staticfiles",
 ]
 
-monetary_evolution_apps = [
-    CoreConfig.name,
-]
+monetary_evolution_apps = [CoreConfig.name, MonetaryConfig.name]
 
 INSTALLED_APPS = django_apps + monetary_evolution_apps
 
@@ -129,7 +128,10 @@ DATABASES = {
         "NAME": "postgres",
         "USER": "postgres",
         "PASSWORD": "postgres",
-        "HOST": "monetary-evolution-db",
+        "HOST": os.environ["DB_HOST"],
         "PORT": "5432",
     }
 }
+
+API_VAT_COMPLY = os.environ["API_VAT_COMPLY"]
+DATE_FORMAT = "%Y-%m-%d"
