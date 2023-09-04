@@ -3,12 +3,13 @@ from typing import Dict
 from typing import List
 
 import requests
+from django.conf import settings
 
 from monetary_evolution.apps.core.repository import AbstractApiRepository
 
 
 class RepositoryApiVatComply(AbstractApiRepository):
-    RATES = ["BRL", "EUR", "JPY"]
+    RATES = settings.RATES_DEFAULT
 
     def get(
         self,
@@ -16,9 +17,6 @@ class RepositoryApiVatComply(AbstractApiRepository):
         headers: Dict = None,
         params: Dict = None,
     ) -> List[Dict]:
-        print(
-            "params", params or {}
-        )
         response = requests.get(endpoint, headers=headers or {}, params=params or {})
         response_json = response.json()
         rates_response = response_json.get("rates")
@@ -29,6 +27,8 @@ class RepositoryApiVatComply(AbstractApiRepository):
                 "variation_date": response_json.get("date"),
             }
             for key, value in rates_response.items()
-            if key in self.RATES
         ]
         return result
+
+
+repository_api_vat_comply = RepositoryApiVatComply(settings.API_VAT_COMPLY)

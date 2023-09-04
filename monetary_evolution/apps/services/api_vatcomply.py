@@ -6,6 +6,7 @@ from django.conf import settings
 
 from monetary_evolution.apps.core.service import AbstractApiService
 from monetary_evolution.apps.repositories.api_vatcomply import RepositoryApiVatComply
+from monetary_evolution.apps.repositories.api_vatcomply import repository_api_vat_comply
 
 
 class ServiceApiVatComply(AbstractApiService):
@@ -33,3 +34,6 @@ class ServiceApiVatComply(AbstractApiService):
         for n in range(int_range):
             result_return.append(start_date + timedelta(n))
         return result_return
+
+
+service_api_vat_comply = ServiceApiVatComply(repository_api_vat_comply)
