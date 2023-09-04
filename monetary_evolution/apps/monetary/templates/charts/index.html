@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pie Chart Page</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+</head>
+<body>
+<div>
+    <h2>Set Currency</h2>
+    <form action = "/charts/" method = "post">
+         {% csrf_token %}
+        <label for="currency_one">CurrencyOne: </label>
+        <input id="currency_one" type="text" name="currency_one" value="BRL"><b></b>
+        <label for="currency_second">CurrencyOne: </label>
+        <input id="currency_second" type="text" name="currency_second" value="EUR"><b></b>
+        <label for="currency_third">CurrencyOne: </label>
+        <input id="currency_third" type="text" name="currency_third" value="JPY"><b></b>
+        <input type="submit" value="OK">
+    </form>
+</div>
+<br>
+<div id="container_data"></div>
+<script>
+    Highcharts.chart('container_data', {
+
+            title: {
+                text: 'Monetary Valuation',
+                 align: 'left'
+            },
+            yAxis: {
+                title: {
+                    text: 'Values'
+                }
+            },
+
+            xAxis: {
+                categories: [
+                    {% for entry in dataset.dates %}'{{ entry }}'{% if not forloop.last %}, {% endif %}{% endfor %}
+                ]
+            },
+
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+            series: [
+                {% for entry in dataset.data %}
+                    {
+                        name: '{{ entry.name }}',
+                        data: [
+                            {% for sub_entry in entry.values %}
+                                {{ sub_entry|floatformat:4 }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        ]
+                    }
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            ],
+
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 10
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+        }
+    )
+    ;
+</script>
+</body>
+</html>
